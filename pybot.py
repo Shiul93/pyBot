@@ -28,8 +28,8 @@ class IRCClient:
     def __init__(self,server,channel,nickname):
         self.socket = socket.socket()
         self.socket.connect((server, 6667))
-        self.send("NICK %s" % self.nickname)
-        self.send("USER %(nick)s %(nick)s %(nick)s :%(nick)s" % {'nick':self.nickname})
+        self.send("NICK %s" % nickname)
+        self.send("USER %(nick)s %(nick)s %(nick)s :%(nick)s" % {'nick':nickname})
         cleverbot_client_one = cleverbot.Cleverbot()
         exit=True
         while exit==True:
@@ -68,18 +68,52 @@ class IRCClient:
                 if ctx['msg'] == '!help':
                     self.say('available commands: !help', target)
 
+                if ctx['msg'].startswith('***')==True:
+                    self.say('Bienvenido al canal de Proyecto Magallanes '+ctx['msg'].split()[1]+'!', target)
                 # directed to the bot?
-                if ctx['type'] == 'PRIVMSG' and (ctx['msg'].lower()[0:len(self.nickname)] == self.nickname.lower() or ctx['target'] == self.nickname):
+                if ctx['type'] == 'PRIVMSG' and (ctx['msg'].lower()[0:len(nickname)] == nickname.lower() or ctx['target'] == nickname):
                     # something is speaking to the bot
                     query = ctx['msg']
-                    if ctx['target'] != self.nickname:
-                        query = query[len(self.nickname):]
+                    if ctx['target'] != nickname:
+                        query = query[len(nickname):]
                         query = query.lstrip(':,;. ')
                     # do something intelligent here, like query a chatterbot
                     print 'someone spoke to us: ', query
                     if query== 'pirate':
                         exit=False
                         self.say('Adios mundo cruel', target)
+
+                    elif query=='':
+                        self.say('Que?', target)
+
+                    elif query=='caracruz':
+
+                        self.say('Iniciando protocolo de lanzamiento numismatico!', target)
+                        time.sleep(1)
+                        self.say('Lanzando moneda en ', target)
+                        time.sleep(1)
+                        self.say('3', target)
+                        time.sleep(1)
+                        self.say('2', target)
+                        time.sleep(1)
+                        self.say('1', target)
+                        time.sleep(1)
+                        self.say('Ha salido:', target)
+                        res=random.random()
+                        if res>0.5:
+                            self.say('Cara!', target)
+                        elif res==0.5:
+                            time.sleep(1)
+                            self.say('...', target)
+                            time.sleep(1)
+                            self.say('...', target)
+                            time.sleep(1)
+                            self.say('Os quedais con cara de tontos al ver que ha quedado de canto!', target)
+                        else:
+                            self.say('Cruz!', target)
+
+
+                    
                         
                     else:
                         response = cleverbot_client_one.ask(query)
@@ -99,7 +133,14 @@ class IRCClient:
         for c in self.channels:
             self.send("JOIN %s" % c)
             # say hello to every channel
-            self.say('Hola a todos menos a JavierNH y a Bot, que son unos estirados', c)
+            ###time.sleep(3)
+            ##self.say('Sabes aquel que dice...', c)
+            #time.sleep(5)
+            #self.say('...que van dos bots y se cae el de enmedio?', c)
+            #time.sleep(3)
+            #self.say('yoqsetio xdxd', c)
+            self.say('ShiulTroller v0.2 online, hola a todos :D', c)
+
 
 
 
@@ -137,11 +178,13 @@ def conversation():
         #print '##Answer= '+answer+' ##'
 
 def ircBot():
-    nickname = 'ShiulTroller'
+    nickname = 'Mush'
     channels = '#ProyectoMagallanes'
     server='irc.Mibbit.Net'
     
-    IRCClient(server,channels,nickname)
+    client=IRCClient(server,channels,nickname)
+    del client
+    menu()
 
 def testFunct():
     testStr= stdin.readline()
