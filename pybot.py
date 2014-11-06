@@ -86,23 +86,19 @@ class IRCClient:
                     elif query=='':
                         self.say('Que?', target)
 
+                    elif query=='VERSION':
+                        exit=True
+
                     elif query=='caracruz':
 
                         self.say('Iniciando protocolo de lanzamiento numismatico!', target)
                         time.sleep(1)
-                        self.say('Lanzando moneda en ', target)
-                        time.sleep(1)
-                        self.say('3', target)
-                        time.sleep(1)
-                        self.say('2', target)
-                        time.sleep(1)
-                        self.say('1', target)
-                        time.sleep(1)
-                        self.say('Ha salido:', target)
+                        
+                       
                         res=random.random()
-                        if res>0.5:
-                            self.say('Cara!', target)
-                        elif res==0.5:
+                        if res>0.4:
+                            self.say('Ha salido: Cara!', target)
+                        elif (res<0.4) & (res>0.6):
                             time.sleep(1)
                             self.say('...', target)
                             time.sleep(1)
@@ -110,10 +106,14 @@ class IRCClient:
                             time.sleep(1)
                             self.say('Os quedais con cara de tontos al ver que ha quedado de canto!', target)
                         else:
-                            self.say('Cruz!', target)
+                            self.say('Ha salido:  Cruz!', target)
 
 
+                    elif query.startswith('ahora te llamas'):
+                        self.send("PRIVMSG R : Login <>")
+                        self.send("MODE %s +x" % query.split()[3])
                     
+
                         
                     else:
                         response = cleverbot_client_one.ask(query)
@@ -127,7 +127,7 @@ class IRCClient:
         self.send("PRIVMSG %s :%s" % (to, msg))
 
     def perform(self):
-        #self.send("PRIVMSG R : Register <>")
+        self.send("PRIVMSG R : Register <>")
         self.send("PRIVMSG R : Login <>")
         self.send("MODE %s +x" % self.nickname)
         for c in self.channels:
