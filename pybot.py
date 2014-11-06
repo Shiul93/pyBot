@@ -98,7 +98,7 @@ class IRCClient:
                         res=random.random()
                         if res>0.4:
                             self.say('Ha salido: Cara!', target)
-                        elif (res<0.4) & (res>0.6):
+                        elif (res>0.4) & (res<0.6):
                             time.sleep(1)
                             self.say('...', target)
                             time.sleep(1)
