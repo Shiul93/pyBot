@@ -21,9 +21,9 @@ import socket
 class IRCClient:
     socket = None
     connected = False
-    nickname = 'ShiulTroller'
+    nickname = 'nick'
     channels = ['#ProyectoMagallanes']
-    server='irc.Mibbit.Net'
+    server='server'
     
     def __init__(self,server,channel,nickname):
         self.socket = socket.socket()
@@ -82,12 +82,15 @@ class IRCClient:
                     if query== 'pirate':
                         exit=False
                         self.say('Adios mundo cruel', target)
+                        #self.socket.shutdown(SHUT_WR)
+                        self.socket.close()
+                        
 
                     elif query=='':
                         self.say('Que?', target)
 
                     elif query=='VERSION':
-                        exit=True
+                        self.send("PRIVMSG R : Version 0.2")
 
                     elif query=='caracruz':
 
@@ -139,7 +142,8 @@ class IRCClient:
             #self.say('...que van dos bots y se cae el de enmedio?', c)
             #time.sleep(3)
             #self.say('yoqsetio xdxd', c)
-            self.say('ShiulTroller v0.2 online, hola a todos :D', c)
+            self.say('Hola', c)
+            time.sleep(15)
 
 
 
@@ -178,7 +182,7 @@ def conversation():
         #print '##Answer= '+answer+' ##'
 
 def ircBot():
-    nickname = 'Mush'
+    nickname = 'Magallanes'
     channels = '#ProyectoMagallanes'
     server='irc.Mibbit.Net'
     
