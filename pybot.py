@@ -15,10 +15,13 @@ import cleverbot
 
 import ircfunct
 
+import socket
+
 f = open('clever.log','a')
 
 stdin = sys.stdin
 
+socket = socket.socket() #Socket for the IRC connection
 
 
 
@@ -27,7 +30,7 @@ def ircBot():
     channels = '#ProyectoMagallanes'
     server='irc.Mibbit.Net'
     
-    client=ircfunct.IRCClient(server,channels,nickname)
+    client=ircfunct.IRCClient(socket,server,channels,nickname)
     del client
     menu()
 
@@ -69,6 +72,7 @@ if __name__ == '__main__':
     try:
         main()
     except KeyboardInterrupt:
+        socket.close()
         menu()
         
     except Exception, err:

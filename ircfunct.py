@@ -19,12 +19,14 @@ class IRCClient:
     nickname = 'nick'
     channels = ['#ProyectoMagallanes']
     server='server'
+    activated = False
     
-    def __init__(self,server,channel,nickname):
-        self.socket = socket.socket()
+    def __init__(self,rsocket,server,channel,nickname):
+        self.socket = rsocket
         self.socket.connect((server, 6667))
         self.send("NICK %s" % nickname)
         self.send("USER %(nick)s %(nick)s %(nick)s :%(nick)s" % {'nick':nickname})
+        self.send("VERSION 1.0")
         cleverbot_client_one = cleverbot.Cleverbot()
         exit=True
         while exit==True:
@@ -77,15 +79,19 @@ class IRCClient:
                     if query== 'pirate':
                         exit=False
                         self.say('Adios mundo cruel', target)
-                        #self.socket.shutdown(SHUT_WR)
+                        
                         self.socket.close()
                         
 
                     elif query=='':
                         self.say('Que?', target)
 
+                    elif query=='activate':
+                        self.say('Activado', target)
+                        self.activated = True
+
                     elif query=='VERSION':
-                        self.send("PRIVMSG R : Version 0.2")
+                        self.send("Version 0.2")
 
                     elif query=='caracruz':
 
@@ -108,14 +114,20 @@ class IRCClient:
 
 
                     elif query.startswith('ahora te llamas'):
-                        self.send("PRIVMSG R : Login <>")
-                        self.send("MODE %s +x" % query.split()[3])
-                    
-
+                        self.send("NICK %s" % query.split()[3])
+                        nickname=query.split()[3]
                         
+                    
+                    elif query=='Modo de respuesta inteligente desactivado':
+                        pass
+
                     else:
-                        response = cleverbot_client_one.ask(query)
-                        self.say(response, target)
+                    	if self.activated:
+                    		response = cleverbot_client_one.ask(query)
+                        	self.say(response, target)
+                        else:
+                        	self.say('Modo de respuesta inteligente desactivado', target)
+                        
 
     def send(self, msg):
         print "I>",msg
@@ -125,9 +137,9 @@ class IRCClient:
         self.send("PRIVMSG %s :%s" % (to, msg))
 
     def perform(self):
-        self.send("PRIVMSG R : Register <>")
-        self.send("PRIVMSG R : Login <>")
-        self.send("MODE %s +x" % self.nickname)
+        #self.send("PRIVMSG R : Register <>")
+        #self.send("PRIVMSG R : Login <>")
+        #self.send("MODE %s +x" % self.nickname)
         for c in self.channels:
             self.send("JOIN %s" % c)
             # say hello to every channel
@@ -138,4 +150,9 @@ class IRCClient:
             #time.sleep(3)
             #self.say('yoqsetio xdxd', c)
             self.say('Hola', c)
-            time.sleep(15)
+            #time.sleep(15)
+
+
+
+
+
