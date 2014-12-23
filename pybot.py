@@ -26,11 +26,12 @@ socket = socket.socket() #Socket for the IRC connection
 
 
 def ircBot():
-    nickname = 'Magallanes'
+    nickname = 'JuanElBienDotado'
     channels = '#ProyectoMagallanes'
     server='irc.Mibbit.Net'
     
     client=ircfunct.IRCClient(socket,server,channels,nickname)
+    socket.close()
     del client
     menu()
 

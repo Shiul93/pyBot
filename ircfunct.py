@@ -80,7 +80,7 @@ class IRCClient:
                         exit=False
                         self.say('Adios mundo cruel', target)
                         
-                        self.socket.close()
+                        
                         
 
                     elif query=='':
@@ -90,8 +90,16 @@ class IRCClient:
                         self.say('Activado', target)
                         self.activated = True
 
+                    elif query=='desactivate':
+                        self.say('Desactivado', target)
+                        self.activated = False
+
                     elif query=='VERSION':
                         self.send("Version 0.2")
+
+                    elif query=='names':
+                        self.send("NAMES")
+
 
                     elif query=='caracruz':
 
